@@ -1,4 +1,4 @@
-# Cyberplex
+# Gulp webpack with Docker ACF Wordpress
 
 
 
@@ -8,14 +8,15 @@ Use latest NODE version
 
 Then:
 1. You must be in the /FRONT/ folder (cd FRONT)
-2. ```npm i ```
-2. ```gulp ```
+2. Install dependencies ```npm i ```
+3. Run theme initialization ```node setup.js ```
+4. Start frontend ```gulp ```
+5. Start backend ```cd .. ``` and ```docker-compose up```
+
 
 ## Webpack works with Wordpress
-You don't need to stop using SCSS and other features, just configure **const wpFolder** in the gulpfile.js
-```
-const wpFolder = '../themes/velena'
-```
+You don't need to stop using SCSS and other features, just run the theme initialization script ```node setup.js```
+
 ## Separated JS and CSS
 **JS:**
 
