@@ -1,0 +1,11 @@
+@import "../mixins";
+
+.promo{
+  min-height: Min(100vh,rem(1080));
+  position: relative;
+  display: flex;
+  align-items: center;
+
+
+}
+  
