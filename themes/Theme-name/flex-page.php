@@ -9,7 +9,7 @@
     $this_page_styles = array();
     $this_page_scripts = array();
     
-    $acf_page = get_fields()['page_flex'];
+    $acf_page = get_fields()['sections'];
     
     function getAcfSection($slug=''){
         global $acf_page;
@@ -27,13 +27,12 @@
     }
     
     ob_start();
-    if(have_rows('page_flex')):
-        while(have_rows('page_flex')): the_row();
+    if(have_rows('sections')):
+        while(have_rows('sections')): the_row();
             get_template_part( 'template-parts/'. get_row_layout() );
         endwhile;
     endif;
     $sections_html = ob_get_clean();
-
 ?>
 
 <?php get_header(); ?>
