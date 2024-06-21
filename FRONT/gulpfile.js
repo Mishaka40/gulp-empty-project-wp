@@ -26,7 +26,6 @@ const minify = require('gulp-minify');
 const {
   readFileSync
 } = require('fs');
-const typograf = require('gulp-typograf');
 const webp = require('gulp-webp');
 const mainSass = gulpSass(sass);
 const webpackStream = require('webpack-stream');
@@ -324,9 +323,6 @@ const htmlInclude = () => {
         prefix: '@',
         basepath: '@file'
       }))
-      .pipe(typograf({
-        locale: ['ru', 'en-US']
-      }))
       .pipe(dest(buildFolder))
       .pipe(browserSync.stream());
 }
@@ -351,6 +347,13 @@ const watchFiles = () => {
   watch(`${paths.srcImgFolder}/**/**.{jpg,jpeg,png}`, webpImages);
   watch(paths.srcSvg, svgSprites);
 }
+
+const watchFilesSimple = () => {
+  watch(paths.srcScss, styles);
+  watch(paths.srcScssSections, stylesSections);
+  watch(paths.srcMainJs, scripts);
+  watch(paths.srcSectionsJs, scriptsSections);
+};
 
 const cache = () => {
   return src(`${buildFolder}/**/*.{css,js,svg,png,jpg,jpeg,webp,woff2}`, {
@@ -418,5 +421,7 @@ exports.backend = series(clean, htmlInclude, scriptsBackend, stylesBackend, font
 exports.build = series(toProd, clean, htmlInclude, scripts, scriptsSections, styles, stylesSections, fonts, images, webpImages, svgSprites, htmlMinify);
 
 exports.cache = series(cache, rewrite);
+
+exports.simple = series(scripts, scriptsSections, scriptsPlugins, styles, stylesPlugins, stylesSections, watchFilesSimple); //without server, html, images, fonts, svgs.
 
 exports.zip = zipFiles;
