@@ -1,0 +1,11 @@
+
+
+.acfe-flexible-layout-header {
+    padding-left: 10px;
+    .acfe-flexible-layout-thumbnail {
+        margin-bottom: 10px;
+        &+span{
+            display: none;
+        }
+    }
+}
