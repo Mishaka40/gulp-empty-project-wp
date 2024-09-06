@@ -7,14 +7,39 @@ add_action('after_setup_theme', function () {
     add_theme_support('post-thumbnails');
 });
 
+function get_file_version($file_path) {
+    if (file_exists($file_path)) {
+        return filemtime($file_path);
+    } else {
+        return '0';
+    }
+}
 add_action('wp_enqueue_scripts', function () {
     global $this_page_scripts;
     global $this_page_styles;
+    global $require_jquery;
+    
+    if($require_jquery) {
+        wp_enqueue_script('jquery');
+    } else {
+        wp_deregister_script('jquery');
+    }
+    
+    $stylesheet_directory = get_stylesheet_directory_uri();
+    $theme_directory = get_template_directory();
     
     if (!empty($this_page_scripts)) {
         foreach ($this_page_scripts as $handle => $src) {
             if ($src) {
-                wp_enqueue_script($handle, $src, array('jquery'), null, true);
+                if(!str_contains($src, '//')){
+                    $file_path = $theme_directory . $src;
+                    $file_uri = $stylesheet_directory . $src;
+                    $version = get_file_version($file_path);
+                } else {
+                    $file_uri = $src;
+                    $version = null;
+                }
+                wp_enqueue_script($handle, $file_uri, array(), $version, true);
             } else {
                 wp_enqueue_script($handle);
             }
@@ -22,7 +47,19 @@ add_action('wp_enqueue_scripts', function () {
     }
     if (!empty($this_page_styles)) {
         foreach ($this_page_styles as $handle => $src) {
-            wp_enqueue_style($handle, $src, array(), '', 'all');
+            if ($src) {
+                if(!str_contains($src, '//')){
+                    $file_path = $theme_directory . $src;
+                    $file_uri = $stylesheet_directory . $src;
+                    $version = get_file_version($file_path);
+                } else {
+                    $file_uri = $src;
+                    $version = null;
+                }
+                wp_enqueue_style($handle, $file_uri, array(), $version);
+            } else {
+                wp_enqueue_style($handle);
+            }
         }
     }
 });

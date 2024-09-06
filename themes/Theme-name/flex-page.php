@@ -9,28 +9,14 @@
     $this_page_styles = array();
     $this_page_scripts = array();
     
-    $acf_page = get_fields()['sections'];
-    
-    function getAcfSection($slug=''){
-        global $acf_page;
-        
-        $found_key = array_search($slug, array_column($acf_page, 'acf_fc_layout'));
-        
-        if(!is_numeric($found_key)){
-            return [];
-        }
-        $found_item = $acf_page[$found_key];
-        
-        $acf_page[$found_key] = ['acf_fc_layout'=>false];
-        
-        return $found_item;
-    }
+    $acf_page = get_field('sections');
     
     ob_start();
-    if(have_rows('sections')):
-        while(have_rows('sections')): the_row();
-            get_template_part( 'template-parts/'. get_row_layout() );
-        endwhile;
+    if(!empty($acf_page)):
+        foreach($acf_page as $index=>$acf_page_section):
+            $id = $acf_page_section['acf_fc_layout'].'-'.$index;
+            get_template_part( 'template-parts/'. $acf_page_section['acf_fc_layout'], null, ['id' => $id, 'section' => $acf_page_section] );
+        endforeach;
     endif;
     $sections_html = ob_get_clean();
 ?>
